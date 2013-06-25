@@ -1513,7 +1513,7 @@ status_t DashPlayer::getParameter(int key, Parcel *reply)
     }
 
     utf8_to_utf16_no_null_terminator((uint8_t *)data_8, data_8_Size, (char16_t *) data_16);
-    err = reply->writeString16((char16_t *)data_16, data_8_Size);
+    err = reply->writeString16((uint16_t *)data_16, data_8_Size);
     free(data_16);
     return err;
 }
