@@ -29,6 +29,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     An Open max test application ....
 */
 
+#define LOG_TAG "OMX-VDEC-TEST"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -53,7 +55,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 extern "C"{
 #include<utils/Log.h>
 }
-#define LOG_TAG "OMX-VDEC-TEST"
 #define DEBUG_PRINT
 #define DEBUG_PRINT_ERROR ALOGE
 
