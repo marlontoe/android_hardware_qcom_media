@@ -62,6 +62,9 @@ libmm-venc-inc      += hardware/qcom/media/libc2dcolorconvert
 libmm-venc-inc      += hardware/qcom/$(DISPLAY)/libcopybit
 libmm-venc-inc      += frameworks/av/include/media/stagefright
 
+ifneq ($(TARGET_HAS_OLD_QCOM_ION),)
+libmm-venc-def += -DOLD_ION_API
+endif
 
 
 LOCAL_MODULE                    := libOmxVenc

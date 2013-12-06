@@ -59,6 +59,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MPEG4_SUPPORTED_WIDTH (480)
 #define MPEG4_SUPPORTED_HEIGHT (368)
 
+
+#define ION_FLAG_CACHED 0
 #define VC1_SP_MP_START_CODE        0xC5000000
 #define VC1_SP_MP_START_CODE_MASK   0xFF000000
 #define VC1_AP_START_CODE           0x00000100
@@ -4303,11 +4305,21 @@ int omx_video::alloc_map_ion_memory(int size,struct ion_allocation_data *alloc_d
 {
   struct venc_ion buf_ion_info;
   int ion_device_fd =-1,rc=0,ion_dev_flags = 0;
+
   if (size <=0 || !alloc_data || !fd_data) {
     DEBUG_PRINT_ERROR("\nInvalid input to alloc_map_ion_memory");
     return -EINVAL;
 	}
+
+#ifdef NEW_ION_API
     ion_dev_flags = O_RDONLY;
+#else
+    if(!secure_session && flag == ION_FLAG_CACHED) {
+        ion_dev_flags = O_RDONLY;
+    } else {
+        ion_dev_flags = O_RDONLY | O_DSYNC;
+    }
+#endif
         ion_device_fd = open (MEM_DEVICE,ion_dev_flags);
         if(ion_device_fd < 0)
         {
@@ -4316,19 +4328,32 @@ int omx_video::alloc_map_ion_memory(int size,struct ion_allocation_data *alloc_d
         }
         alloc_data->len = size;
         alloc_data->align = 4096;
+#ifdef NEW_ION_API
         alloc_data->flags = 0;
+
         if(!secure_session && (flag & ION_FLAG_CACHED))
         {
           alloc_data->flags = ION_FLAG_CACHED;
         }
-
-        if (secure_session)
-           alloc_data->heap_mask = (ION_HEAP(MEM_HEAP_ID) | ION_SECURE);
-        else
-           alloc_data->heap_mask = (ION_HEAP(MEM_HEAP_ID) |
-                ION_HEAP(ION_IOMMU_HEAP_ID));
+#endif
+        if (secure_session) {
+#ifdef NEW_ION_API
+           alloc_data->heap_mask = (ION_HEAP(MEM_HEAP_ID) | ION_SECURE); 
+#else
+           alloc_data->flags = (ION_HEAP(MEM_HEAP_ID) | ION_SECURE);
+#endif
+	}
+        else {
+#ifdef NEW_ION_API
+           alloc_data->heap_mask =
+#else
+           alloc_data->flags =
+#endif
+              (ION_HEAP(MEM_HEAP_ID) | ION_HEAP(ION_IOMMU_HEAP_ID));
+	}
 
         rc = ioctl(ion_device_fd,ION_IOC_ALLOC,alloc_data);
+
         if(rc || !alloc_data->handle) {
            DEBUG_PRINT_ERROR("\n ION ALLOC memory failed ");
            alloc_data->handle =NULL;

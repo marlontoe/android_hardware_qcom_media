@@ -97,6 +97,10 @@ extern "C"{
 #include <media/hardware/HardwareAPI.h>
 #endif
 
+#ifndef OLD_ION_API
+#define NEW_ION_API 1
+#endif
+
 #include <unistd.h>
 
 #if defined (_ANDROID_ICS_)

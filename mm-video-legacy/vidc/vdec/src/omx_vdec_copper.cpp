@@ -109,6 +109,7 @@ char ouputextradatafilename [] = "/data/extradata";
 #define VC1_STRUCT_B_POS            24
 #define VC1_SEQ_LAYER_SIZE          36
 
+#define ION_FLAG_CACHED 1
 #define MEM_DEVICE "/dev/ion"
 #define MEM_HEAP_ID ION_CP_MM_HEAP_ID
 

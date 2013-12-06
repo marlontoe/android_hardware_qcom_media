@@ -48,6 +48,10 @@ libOmxVdec-def += -DUSE_ION
 # 			Make the Shared library (libOmxVdec)
 # ---------------------------------------------------------------------------------
 
+ifneq ($(TARGET_HAS_OLD_QCOM_ION),)
+libOmxVdec-def += -DOLD_ION_API
+endif
+
 include $(CLEAR_VARS)
 LOCAL_PATH:= $(ROOT_DIR)
 
