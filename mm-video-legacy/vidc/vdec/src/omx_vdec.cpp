@@ -7589,17 +7589,28 @@ int omx_vdec::alloc_map_ion_memory(OMX_U32 buffer_size,
      DEBUG_PRINT_ERROR("Invalid arguments to alloc_map_ion_memory\n");
      return -EINVAL;
   }
+#ifdef NEW_ION_API
   ion_dev_flag = O_RDONLY;
+#else
+  if(!secure_mode && flag == ION_FLAG_CACHED)
+  {
+     ion_dev_flag = O_RDONLY;
+  } else {
+    ion_dev_flag = (O_RDONLY | O_DSYNC);
+  }
+#endif
   fd = open (MEM_DEVICE, ion_dev_flag);
   if (fd < 0) {
      DEBUG_PRINT_ERROR("opening ion device failed with fd = %d\n", fd);
      return fd;
   }
+#ifdef NEW_ION_API
   alloc_data->flags = 0;
   if (!secure_mode && (flag & ION_FLAG_CACHED))
   {
     alloc_data->flags |= ION_FLAG_CACHED;
   }
+#endif
   alloc_data->len = buffer_size;
   alloc_data->align = clip2(alignment);
   if (alloc_data->align < 4096)
@@ -7608,10 +7619,18 @@ int omx_vdec::alloc_map_ion_memory(OMX_U32 buffer_size,
   }
 
   if(secure_mode) {
-    alloc_data->heap_mask = ION_HEAP(MEM_HEAP_ID);
-    alloc_data->flags |= ION_SECURE;
+#ifdef NEW_ION_API
+      alloc_data->heap_mask = ION_HEAP(MEM_HEAP_ID);
+      alloc_data->flags |= ION_SECURE;
+#else
+      alloc_data->flags = ION_HEAP(MEM_HEAP_ID);
+#endif
   } else {
-    alloc_data->heap_mask = (ION_HEAP(ION_IOMMU_HEAP_ID));
+#ifdef NEW_ION_API
+      alloc_data->heap_mask = ION_HEAP(ION_IOMMU_HEAP_ID);
+#else
+      alloc_data->flags = (ION_HEAP(ION_IOMMU_HEAP_ID));
+#endif
   }
   rc = ioctl(fd,ION_IOC_ALLOC,alloc_data);
   if (rc || !alloc_data->handle) {
