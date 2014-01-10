@@ -13,7 +13,7 @@ OMXCORE_CFLAGS += -Wno-error -fno-strict-aliasing
 
 ifeq ($(TARGET_BOARD_PLATFORM),msm7627a)
 MM_CORE_TARGET = 7627A
-else ifeq ($(TARGET_BOARD_PLATFORM),msm7630_surf)
+else ifeq ($(TARGET_BOARD_PLATFORM),msm7x30)
 MM_CORE_TARGET = 7630
 else ifeq ($(TARGET_BOARD_PLATFORM),msm8660)
 MM_CORE_TARGET = 8660
