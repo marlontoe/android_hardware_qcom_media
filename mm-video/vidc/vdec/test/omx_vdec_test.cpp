@@ -2877,7 +2877,8 @@ static int Read_Buffer_From_Size_Nal(OMX_BUFFERHEADERTYPE  *pBufHdr)
     {
       temp_size[SIZE_NAL_FIELD_MAX - 1 - i] = pBufHdr->pBuffer[pBufHdr->nOffset + j];
     }
-    size = (unsigned int)(*((unsigned int *)(temp_size)));
+    unsigned int *sizeptr = (unsigned int *)temp_size;
+    size = *sizeptr;
 
     // now read the data
     bytes_read = read(inputBufferFileFd, pBufHdr->pBuffer + pBufHdr->nOffset + nalSize, size);
