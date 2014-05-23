@@ -35,6 +35,7 @@ libmm-venc-def += -DBADGER
 endif
 ifeq ($(TARGET_BOARD_PLATFORM),msm7x30)
 libmm-venc-def += -DMAX_RES_720P
+libmm-venc-def += -DNO_IOMMU
 endif
 ifeq ($(TARGET_USES_ION),true)
 libmm-venc-def += -DUSE_ION

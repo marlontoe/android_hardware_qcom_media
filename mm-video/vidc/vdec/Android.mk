@@ -40,6 +40,7 @@ libOmxVdec-def += -D_COPPER_
 endif
 ifeq ($(TARGET_BOARD_PLATFORM),msm7x30)
 libOmxVdec-def += -DMAX_RES_720P
+libOmxVdec-def += -DNO_IOMMU
 endif
 
 libOmxVdec-def += -D_ANDROID_ICS_
