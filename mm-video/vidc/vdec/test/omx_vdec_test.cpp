@@ -29,6 +29,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     An Open max test application ....
 */
 
+#define LOG_TAG "OMX-VDEC-TEST"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -53,7 +55,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 extern "C"{
 #include<utils/Log.h>
 }
-#define LOG_TAG "OMX-VDEC-TEST"
 #define DEBUG_PRINT
 #define DEBUG_PRINT_ERROR ALOGE
 
@@ -2876,7 +2877,8 @@ static int Read_Buffer_From_Size_Nal(OMX_BUFFERHEADERTYPE  *pBufHdr)
     {
       temp_size[SIZE_NAL_FIELD_MAX - 1 - i] = pBufHdr->pBuffer[pBufHdr->nOffset + j];
     }
-    size = (unsigned int)(*((unsigned int *)(temp_size)));
+    unsigned int *sizeptr = (unsigned int *)temp_size;
+    size = *sizeptr;
 
     // now read the data
     bytes_read = read(inputBufferFileFd, pBufHdr->pBuffer + pBufHdr->nOffset + nalSize, size);
