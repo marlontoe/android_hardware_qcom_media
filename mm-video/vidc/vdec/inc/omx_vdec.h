@@ -40,6 +40,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //                             Include Files
 //////////////////////////////////////////////////////////////////////////////
 
+#ifdef MAX_RES_720P
+#define LOG_TAG "OMX-VDEC-720P"
+#elif MAX_RES_1080P
+#define LOG_TAG "OMX-VDEC-1080P"
+#else
+#define LOG_TAG "OMX-VDEC"
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -60,13 +68,6 @@ extern "C"{
 #include <linux/videodev2.h>
 #include <poll.h>
 #define TIMEOUT 5000
-#ifdef MAX_RES_720P
-#define LOG_TAG "OMX-VDEC-720P"
-#elif MAX_RES_1080P
-#define LOG_TAG "OMX-VDEC-1080P"
-#else
-#define LOG_TAG "OMX-VDEC"
-#endif
 
 #else //_ANDROID_
 #define DEBUG_PRINT_LOW printf

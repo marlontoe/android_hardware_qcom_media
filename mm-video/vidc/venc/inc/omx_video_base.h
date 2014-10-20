@@ -41,13 +41,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //                             Include Files
 //////////////////////////////////////////////////////////////////////////////
 
+#define LOG_TAG "OMX-VENC-720p"
+
 #include<stdlib.h>
 #include <stdio.h>
 #include <sys/mman.h>
 #ifdef _ANDROID_
   #include <binder/MemoryHeapBase.h>
 #ifdef _ANDROID_ICS_
-  #include "QComOMXMetadata.h"
+  #include <QComOMXMetadata.h>
 #endif
 #endif // _ANDROID_
 #include <pthread.h>

@@ -4151,7 +4151,7 @@ OMX_ERRORTYPE  omx_vdec::set_config(OMX_IN OMX_HANDLETYPE      hComp,
 
   switch(configIndex)
   {
-    case OMX_IndexVendorVideoExtraData:
+    case static_cast<int>(OMX_IndexVendorVideoExtraData):
     {
     OMX_VENDOR_EXTRADATATYPE *config = (OMX_VENDOR_EXTRADATATYPE *) configData;
     DEBUG_PRINT_LOW("Index OMX_IndexVendorVideoExtraData called");
@@ -4959,7 +4959,7 @@ OMX_ERRORTYPE omx_vdec::free_output_buffer(OMX_BUFFERHEADERTYPE *bufferHdr)
 #endif
   }
 #ifdef MAX_RES_1080P
-  if(drv_ctx.enable_sec_metadata)
+  if(drv_ctx.enable_sec_metadata && client_extradata)
   {
     vdec_dealloc_meta_buffers();
   }
@@ -5408,7 +5408,7 @@ OMX_ERRORTYPE  omx_vdec::allocate_output_buffer(
         pPlatformList++;
       }
 #ifdef MAX_RES_1080P
-      if(eRet == OMX_ErrorNone && drv_ctx.enable_sec_metadata)
+      if(eRet == OMX_ErrorNone && drv_ctx.enable_sec_metadata && client_extradata)
       {
         eRet = vdec_alloc_meta_buffers();
         if (eRet) {
@@ -7387,11 +7387,11 @@ int omx_vdec::async_message_process (void *context, void* message)
 
         if (omx->output_use_buffer) {
           DEBUG_PRINT_LOW("FBD: memcpy(%p, %p, %d)", omxhdr->pBuffer,
-            vdec_msg->msgdata.output_frame.bufferaddr +
+            (char*)vdec_msg->msgdata.output_frame.bufferaddr +
             vdec_msg->msgdata.output_frame.offset,
             vdec_msg->msgdata.output_frame.len);
           memcpy ( omxhdr->pBuffer,
-                   (vdec_msg->msgdata.output_frame.bufferaddr +
+                   ((char*)vdec_msg->msgdata.output_frame.bufferaddr +
                     vdec_msg->msgdata.output_frame.offset),
                     vdec_msg->msgdata.output_frame.len );
         }
